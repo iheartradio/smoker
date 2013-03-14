@@ -1,12 +1,11 @@
 
 (ns smoker.udf.URLHostname
-  (:import 
+  (:import
    [org.apache.hadoop.hive.ql.exec UDF]
    [java.net URI URL]
    [org.apache.hadoop.io Text])
-  (:require 
-   [clojure.contrib.str-utils2 :as su]
-   [clojure.contrib.logging :as log]
+  (:require
+   [clojure.tools.logging :as log]
    [smoker.url-utils :as ru]
    [url-normalizer.core :as norm])
   (:gen-class
@@ -17,7 +16,7 @@
 (defn #^Text evaluate
   "extract the hostname for this url"
   [#^Text s]
-  (try 
+  (try
     (if s
       (let [url (norm/canonicalize-url (ru/as-url (.toString s)))]
        (Text. (str (.getHost (ru/as-url url)))))
@@ -25,7 +24,7 @@
     (catch java.net.URISyntaxException e (do (log/warn e) nil))
     (catch java.net.MalformedURLException e (do (log/warn e) nil))))
 
-(defn #^Text -evaluate 
+(defn #^Text -evaluate
   "Hook for Java"
   [this #^Text s]
   (evaluate s))

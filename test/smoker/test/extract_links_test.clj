@@ -1,9 +1,8 @@
 
 (ns smoker.test.extract_links_test
-  (:import 
+  (:import
    [org.apache.hadoop.io Text])
-  (:require 
-   [clojure.contrib.str-utils2 :as su]
+  (:require
    [smoker.udf.ExtractLinks :as extract])
   (:use [clojure.test]))
 

@@ -13,10 +13,7 @@
               PrimitiveObjectInspectorFactory]
    [org.apache.hadoop.hive.ql.exec UDF]
    [org.apache.hadoop.io Text]
-   [java.util Date])
-  (:require
-   [clojure.contrib.str-utils2 :as su]
-   [clojure.contrib.seq-utils :as sequ]))
+   [java.util Date]))
 
 (defmacro gen-udtf
   "Creates a UDTF that takes exactly one argument and can return 0 or more tuples.
@@ -54,7 +51,7 @@ You also need to call gen-wrapper-methods."
         (map
          (fn [[i thingy]]
            (.getPrimitiveJavaObject thingy (nth record i)))
-         (sequ/indexed @(.state this)))]
+         (map-indexed vector @(.state this)))]
      (doall
       (let [result (.operate this primitives)]
         (map

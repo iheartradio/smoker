@@ -2,31 +2,31 @@
 ;;; todo move these into the url normalization library or somewhere else
 ;;
 (ns smoker.url-utils
-  (:require 
-   [clojure.contrib.str-utils2 :as su]
+  (:require
+   [clojure.string :as s]
    [url-normalizer.core :as norm]
-   [clojure.contrib.io :as io])
+   [clojure.java.io :as io])
   (:use smoker.utils)
   (:import [java.net URI URL]))
 
 (defn as-url
   "takes urlish and attempts to make it a valid URL"
   [urlish]
-  (let [nospaces (su/replace (str urlish) #"\s" "%20")
+  (let [nospaces (s/replace (str urlish) #"\s" "%20")
         url (io/as-url nospaces)]
     url))
 
 (defn convert-url-to-uri [url]
   (norm/to-uri (as-url url)))
 
-(defn ensure-ends-with 
+(defn ensure-ends-with
   "ensure s ends in char"
   [s char]
-  (if (re-find (java.util.regex.Pattern/compile (str char "$")) s) 
+  (if (re-find (java.util.regex.Pattern/compile (str char "$")) s)
                s (str s char)))
 
 (defn url-encode-href [str]
-  (su/replace str #" " "%20"))
+  (s/replace str #" " "%20"))
 (defn fix-invalid-fragment [str]
   (re-sub-all-but-last #"#" "%23" str))
 (defn preprocess-href [href]
@@ -56,7 +56,7 @@ Note: this is needed becauyse the default URI .resolve is unintuitive see:
 
 (defn href-to-url [href url]
   (try
-    (let [href (su/trim href)
+    (let [href (s/trim href)
           uri #^URI (resolve-href url href)]
       (if (.getHost uri)
         (norm/canonicalize-url uri)

@@ -1,27 +1,26 @@
 
 (ns smoker.udf.ExtractTagText
-  (:import 
-   [org.apache.hadoop.hive.serde2.objectinspector.primitive 
+  (:import
+   [org.apache.hadoop.hive.serde2.objectinspector.primitive
     PrimitiveObjectInspectorFactory])
-  (:use 
+  (:use
    [smoker.utils])
-  (:require 
+  (:require
    [smoker.udtf.gen :as gen]
    [smoker.url-utils :as url-utils]
    [url-normalizer.core :as norm]
-   [clojure.contrib.str-utils2 :as su]
-   [clojure.contrib.seq-utils :as sequ])
-  (:import 
+   [clojure.string :as s])
+  (:import
    [java.net URL]
-   [net.htmlparser.jericho TextExtractor StreamedSource 
+   [net.htmlparser.jericho TextExtractor StreamedSource
     Source StartTag]
    [java.util.regex Pattern])
-  (:import 
+  (:import
    [org.apache.hadoop.io Text]
    [java.util Date]))
 
 (gen/gen-udtf)
-(gen/gen-wrapper-methods 
+(gen/gen-wrapper-methods
   [PrimitiveObjectInspectorFactory/javaStringObjectInspector
    PrimitiveObjectInspectorFactory/javaStringObjectInspector
    PrimitiveObjectInspectorFactory/javaStringObjectInspector])
@@ -32,24 +31,24 @@
 (defn extract-tag-text [source-url tag source]
   (let [tags (.getAllElements source tag)]
     (->> tags
-         (map 
-          (fn [element] 
+         (map
+          (fn [element]
             [source-url
-             tag 
+             tag
              (nil-if-exception (truncate (.toString (.getContent element)) max-len))]))
          (filter both?))))
 
 (defn extract-tags-text [source-url tags body]
   (let [source (Source. body)]
-    (reduce 
+    (reduce
      (fn [acc tag] (concat acc (extract-tag-text source-url tag source)))
      []
-     (su/split tags #"\|"))))
+     (s/split tags #"\|"))))
 
 (defn -operate [this fields]
   (let [[source-url tag body] (seq fields)]
     (if (and source-url tag body)
-      (try 
+      (try
         (extract-tags-text source-url tag body)
         (catch java.lang.RuntimeException e (prn "bad html"))
         (catch java.lang.StackOverflowError e (prn "bad html"))))))
@@ -84,7 +83,7 @@
     ;; Matcher m = p.matcher(s.toString());
     ;; result.set(m.find(0));
     ;; return result;
- 
+
 
   )
 

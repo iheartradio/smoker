@@ -1,8 +1,7 @@
 
 (ns smoker.utils
-  (:require 
-   [clojure.contrib.str-utils2 :as su]
-   [clojure.contrib.io :as io])
+  (:require
+   [clojure.string :as s])
   (:import [java.net URI URL]))
 
 (defmacro nil-if-exception [& body]
@@ -13,7 +12,7 @@
     (loop [str string i (- count 1)]
       (if (<= i 0)
         str
-        (recur (su/replace-first str regex replacement) (dec i))))))
+        (recur (s/replace-first str regex replacement) (dec i))))))
 
 (defn truncate [s c]
   (if (and s (> (.length s) c))

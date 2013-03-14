@@ -3,12 +3,11 @@
   (:import [smoker.udf RobotsURL]
            [smoker.udf NormalizeURL]
            [org.apache.hadoop.io Text])
-  (:require [clojure.contrib.str-utils2 :as su]
-            [smoker.udf.RobotsURL :as robo]
+  (:require [smoker.udf.RobotsURL :as robo]
             [smoker.udf.NormalizeURL :as norm])
   (:use [clojure.test]))
 
-(def robots-tests 
+(def robots-tests
      [["http://a.com" "http://a.com/robots.txt"]
       ["http://b.com/foo/bar/baz.html" "http://b.com/robots.txt"]])
 
@@ -18,7 +17,7 @@
   (is (nil? (robo/evaluate (Text. "asdf")))))
 
 
-(def normal-tests 
+(def normal-tests
      [["http://natemurray.com"      "http://natemurray.com/"]
       ["http://natemurray.com:80"   "http://natemurray.com/"]
       ["http://natemurray.com/#bla" "http://natemurray.com/"]])

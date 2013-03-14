@@ -1,31 +1,30 @@
 
 (ns smoker.udf.RationalizeURL
-  (:import 
+  (:import
    [org.apache.hadoop.hive.ql.exec UDF]
    [java.net URI URL]
    [org.apache.hadoop.io Text])
-  (:require 
-   [clojure.contrib.str-utils2 :as su]
+  (:require
    [smoker.url-utils :as ru]
    [url-normalizer.core :as norm])
   (:gen-class
    :name smoker.udf.RationalizeURL
    :extends org.apache.hadoop.hive.ql.exec.UDF
-   :methods [[evaluate 
-              [org.apache.hadoop.io.Text org.apache.hadoop.io.Text] 
+   :methods [[evaluate
+              [org.apache.hadoop.io.Text org.apache.hadoop.io.Text]
                org.apache.hadoop.io.Text]]))
 
 (defn #^Text evaluate
   "generate a full url from a relative one"
   [source href]
-  (try 
+  (try
     (if (and source href)
       (if-let [new-url (ru/href-to-url (.toString href) (.toString source))]
        (Text. new-url)))
     (catch java.net.URISyntaxException e (do (prn e) nil))
     (catch java.net.MalformedURLException e (do (prn e) nil))))
 
-(defn #^Text -evaluate 
+(defn #^Text -evaluate
   "Hook for Java"
   [this #^Text source #^Text href]
   (evaluate source href))
