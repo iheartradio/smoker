@@ -1,6 +1,6 @@
 (defproject com.combinator/smoker "1.0.2"
   :description "When you visit your Hive, bring your smoker and you'll get stung less"
-  :dependencies 
+  :dependencies
   [[org.clojure/clojure "1.2.0"]
    [org.clojure/clojure-contrib "1.2.0"]
    [url-normalizer "0.0.4"]
@@ -41,8 +41,7 @@
    [mysql/mysql-connector-java "5.0.2"]
    ;; end hive deps
    ]
-  :repositories
-    {"clojars" "http://clojars.org/repo"}
+
   :compile-path "build/classes"
   :target-dir "build"
   :java-source-path "src/java"

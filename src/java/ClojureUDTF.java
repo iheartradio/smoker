@@ -7,6 +7,13 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 
 public abstract class ClojureUDTF extends GenericUDTF {
+  Object[] forwardObj = null;
+  ObjectInspector[] args;
+
+  public void setArgs(ObjectInspector[] args) {
+    this.args = args;
+  }
+
   /**
    * Passes an output row to the collector
    *
@@ -15,12 +22,16 @@ public abstract class ClojureUDTF extends GenericUDTF {
    * gen-class :exposes-methods (won't work for final). We can't even
    * use :exposes and access the collector directly because collector
    * is private in GenericUDTF.
-   * 
+   *
    * @param o
    * @throws HiveException
    */
-  public void emit(Object o) throws HiveException {
-    super.forward(o);
+  public void emit(Object[] o) throws HiveException {
+    if(null == this.forwardObj) {
+      this.forwardObj = new Object[o.length];
+    }
+
+    this.forward(o);
   }
 
 }

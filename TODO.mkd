@@ -1,0 +1,8 @@
+
+## Todo
+
+ 1. implement defudf, defudaf like defudtf
+ 2. move the code to clojure 1.4 and lein2
+ 3. expose the ability to save state via initialize method
+ 4. after 3, then make it look like defmapcatop (stateful type)
+ 5. Integrate with clj-sql or korma ()
