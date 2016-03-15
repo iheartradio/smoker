@@ -1,3 +1,6 @@
+.lein-*
+.nrepl-*
+/target
 /build
 /checkouts
 /lib
